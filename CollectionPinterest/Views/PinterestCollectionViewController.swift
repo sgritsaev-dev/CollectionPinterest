@@ -10,11 +10,8 @@ import UIKit
 final class CollectionPinterestViewController: UICollectionViewController {
     
     private let networkDataFetcher = RandomPicsFetcher()
-    
     private var photosArray = [UnsplashPhoto]()
-    
     private let itemsPerRow: CGFloat = 2
-    
     private let sectionInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     
     override func viewDidLoad() {
@@ -23,9 +20,8 @@ final class CollectionPinterestViewController: UICollectionViewController {
         loadPhotos()
     }
     
-    func loadPhotos() {
+    private func loadPhotos() {
         self.networkDataFetcher.fetchRandomPics { [weak self] (results: Results?) in
-            //почему утечка в памяти, зачем weak self -> перекрестные ссылки, потому что функция в функции
             guard let photos = results else {return}
             self?.photosArray = photos.results
             self?.collectionView.reloadData()
@@ -43,17 +39,6 @@ final class CollectionPinterestViewController: UICollectionViewController {
         collectionView.contentInsetAdjustmentBehavior = .automatic
         collectionView.showsVerticalScrollIndicator = false
     }
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photosArray.count
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PinterestCollectionViewCell.identifier, for: indexPath) as? PinterestCollectionViewCell else { fatalError("failed to deque cell") }
-        let Photo = photosArray[indexPath.item]
-        cell.unsplashPhoto = Photo
-        return cell
-    }
 }
 
 extension CollectionPinterestViewController: UICollectionViewDelegateFlowLayout {
@@ -70,5 +55,16 @@ extension CollectionPinterestViewController: UICollectionViewDelegateFlowLayout 
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return sectionInsets.left
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return photosArray.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PinterestCollectionViewCell.identifier, for: indexPath) as? PinterestCollectionViewCell else { return UICollectionViewCell() }
+        let Photo = photosArray[indexPath.item]
+        cell.unsplashPhoto = Photo
+        return cell
     }
 }

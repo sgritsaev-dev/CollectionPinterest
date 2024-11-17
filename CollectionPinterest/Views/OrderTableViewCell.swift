@@ -9,42 +9,41 @@ import UIKit
 
 final class OrderCell: UITableViewCell {
     static let identifier = "OrderCell"
-
+    
     private let cellContent = UIView()
-    private let restaurantLabel: UILabel = UILabel()
-    private let dateLabel: UILabel = UILabel()
-    private let priceLabel: UILabel = UILabel()
-    private let statusLabel: UILabel = UILabel()
+    private let restaurantLabel = UILabel()
+    private let dateLabel = UILabel()
+    private let priceLabel = UILabel()
+    private let statusLabel = UILabel()
+    private var currentOrder: Order?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
         setupLayer()
-        
     }
     
-    func setupUI() {
-        contentView.backgroundColor = #colorLiteral(red: 0.4592262506, green: 0.5283014178, blue: 0.7002335191, alpha: 1)
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 100, left: 32, bottom: 100, right: 32))
+    }
+    
+    private func setupUI() {
         cellContent.backgroundColor = .white
         
         cellContent.layer.shadowColor = UIColor.darkGray.cgColor
         cellContent.layer.shadowOpacity = 0.2
-        cellContent.layer.shadowRadius = 2
+        cellContent.layer.shadowRadius = 10
         cellContent.layer.shadowOffset = CGSize(width: 0, height: 0)
-        cellContent.layer.cornerRadius = 20
-        cellContent.layer.borderWidth = 0.5
-        cellContent.layer.borderColor = UIColor.lightGray.cgColor
+        cellContent.layer.cornerRadius = 15
 
         restaurantLabel.font = .boldSystemFont(ofSize: 18)
-        
         dateLabel.font = .systemFont(ofSize: 12)
-        
         priceLabel.font = .boldSystemFont(ofSize: 14)
-        
         statusLabel.font = .systemFont(ofSize: 12)
     }
     
-    func setupLayer() {
+    private func setupLayer() {
         contentView.addSubview(cellContent)
         cellContent.addSubview(restaurantLabel)
         cellContent.addSubview(dateLabel)
@@ -58,9 +57,9 @@ final class OrderCell: UITableViewCell {
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         
         cellContent.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
-        cellContent.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32).isActive = true
-        cellContent.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32).isActive = true
-        cellContent.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
+        cellContent.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
+        cellContent.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0).isActive = true
+        cellContent.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         
         restaurantLabel.leadingAnchor.constraint(equalTo: cellContent.leadingAnchor, constant: 10).isActive = true
         restaurantLabel.topAnchor.constraint(equalTo: cellContent.topAnchor, constant: 10).isActive = true
@@ -80,23 +79,26 @@ final class OrderCell: UITableViewCell {
     }
     
     func configure(with order: Order) {
-        restaurantLabel.text = order.restaurant
-        dateLabel.text = order.date
-        priceLabel.text = order.price
-        statusLabel.text = order.status
-        setStatusTextColor()
+        currentOrder = order
+        restaurantLabel.text = currentOrder?.restaurant
+        dateLabel.text = currentOrder?.date
+        priceLabel.text = currentOrder?.price
+        statusLabel.text = currentOrder?.status.rawValue
+        statusLabel.textColor = textColor
     }
-    
-    func setStatusTextColor() {
-        switch statusLabel.text {
-        case "Delivered":
-            statusLabel.textColor = .systemGreen
-        case "Cancelled":
-            statusLabel.textColor = .systemRed
-        case "Pickup":
-            statusLabel.textColor = .systemOrange
+}
+
+extension OrderCell {
+    private var textColor: UIColor {
+        switch currentOrder?.status {
+        case .delivered:
+            return .systemGreen
+        case .cancelled:
+            return .systemRed
+        case .pickup:
+            return .systemOrange
         default:
-            statusLabel.textColor = .black
+            return .black
         }
     }
 }

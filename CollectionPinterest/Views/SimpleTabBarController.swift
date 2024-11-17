@@ -15,12 +15,11 @@ final class SimpleTabBarController: UITabBarController {
         let CollectionViewController = CollectionPinterestViewController(collectionViewLayout: UICollectionViewFlowLayout())
         CollectionViewController.tabBarItem = UITabBarItem(title: "collection", image: UIImage(systemName: "table.fill"), tag: 1)
         
-        let TableViewController = OrdersTableViewController()
-        TableViewController.tabBarItem = UITabBarItem(title: "other", image: UIImage(systemName: "checkmark.rectangle.stack.fill"), tag: 2)
+//        let TableViewController = OrdersTableViewController()
+//        TableViewController.tabBarItem = UITabBarItem(title: "other", image: UIImage(systemName: "checkmark.rectangle.stack.fill"), tag: 2)
         
-//        let TableViewController = UINavigationController(rootViewController: OrdersTableViewController())
-//        CollectionViewController.tabBarItem = UITabBarItem(title: "collection", image: UIImage(systemName: "table.fill"), tag: 1)
-//        TableController.tabBarItem = UITabBarItem(title: "other", image: UIImage(systemName: "checkmark.rectangle.stack.fill"), tag: 2)
+        let TableViewController = UINavigationController(rootViewController: OrdersTableViewController())
+        TableViewController.tabBarItem = UITabBarItem(title: "other", image: UIImage(systemName: "checkmark.rectangle.stack.fill"), tag: 2)
         // спросить зачем делать это через navigationcontroller, если можно обойтись без этого???
         
         viewControllers = [CollectionViewController, TableViewController]

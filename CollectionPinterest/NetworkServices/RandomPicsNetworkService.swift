@@ -16,11 +16,9 @@ final class RandomPicsNetworkService {
     ]
     
     func requestPics(completion: @escaping (Data?, Error?) -> Void) {
-        //спросить зачем нужен escaping и почему без него не работает
-        // спросить про completion простыми словами
         let url = makeUrl()
         var request = URLRequest(url: url)
-        request.allHTTPHeaderFields = ["Authorization":"Client-ID \(accessKeys[0])"]
+        request.allHTTPHeaderFields = ["Authorization":"Client-ID \(accessKeys[1])"]
         request.httpMethod = "get"
         let task = createDataTask(from: request, completion: completion)
         task.resume()
@@ -31,9 +29,8 @@ final class RandomPicsNetworkService {
         components.scheme = "https"
         components.host = "api.unsplash.com"
         components.path = "/photos/random"
-        components.queryItems = [URLQueryItem(name: "count", value: "1")]
+        components.queryItems = [URLQueryItem(name: "count", value: "10")]
         guard let result = components.url else {return URL(string: "https://api.unsplash.com//photos/random")!}
-        // спросить как сделать unwrap тут, здесь что-то сложное
         return result
     }
     
