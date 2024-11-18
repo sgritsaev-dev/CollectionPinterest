@@ -9,15 +9,6 @@ import Foundation
 
 struct Results: Decodable {
     let results: [UnsplashPhoto]
-
-    init(from decoder: Decoder) throws {
-        var container = try decoder.unkeyedContainer()
-        var photos = [UnsplashPhoto]()
-        while !container.isAtEnd {
-            photos.append(try container.decode(UnsplashPhoto.self))
-        }
-        results = photos
-    }
 }
 
 struct UnsplashPhoto: Decodable {
